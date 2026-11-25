@@ -1,0 +1,109 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class App {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+        EmployeeDAO employeeDAO = new EmployeeDAO();
+
+        System.out.println("HR Management System");
+        System.out.println("1. View Employee Details");
+        System.out.println("2. View All Employee Salaries");
+        System.out.println("3. View Salaries by Department");
+        System.out.print("Select an option: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice == 1) {
+
+            System.out.print("Enter Employee Number: ");
+            int employeeID = scanner.nextInt();
+
+            Employee employee = employeeDAO.getEmployee(employeeID);
+
+            if (employee != null) {
+                System.out.println("\nEmployee Details");
+                employee.displayEmployee();
+            } else {
+                System.out.println("Employee not found.");
+            }
+
+        } else if (choice == 2) {
+
+            ArrayList<Employee> employees = employeeDAO.getAllSalaries();
+
+            if (employees != null && !employees.isEmpty()) {
+                printSalaries(employees);
+            } else {
+                System.out.println("No salary records found.");
+            }
+
+        } else if (choice == 3) {
+
+            System.out.print("Enter Department Name: ");
+            String departmentName = scanner.nextLine();
+
+            Department department =
+                    employeeDAO.getDepartment(departmentName);
+
+            if (department != null) {
+
+                System.out.println("\nDepartment: " + department.dept_name);
+
+                ArrayList<Employee> employees =
+                        employeeDAO.getSalariesByDepartment(department);
+
+                if (employees != null && !employees.isEmpty()) {
+                    printSalaries(employees);
+                } else {
+                    System.out.println("No salary records found.");
+                }
+
+            } else {
+                System.out.println("Department not found.");
+            }
+
+        } else {
+            System.out.println("Invalid option.");
+        }
+
+        scanner.close();
+    }
+
+    public static void printSalaries(ArrayList<Employee> employees) {
+
+        // Check employees is not null
+        if (employees == null) {
+            System.out.println("No employees");
+            return;
+        }
+
+        // Print heading
+        System.out.println("\nCurrent Employee Salaries");
+
+        System.out.println(String.format(
+                "%-10s %-15s %-20s %-10s",
+                "Emp No", "First Name", "Last Name", "Salary"));
+
+        // Print employee details
+        for (Employee emp : employees) {
+
+            // Skip null employees
+            if (emp == null) {
+                continue;
+            }
+
+            String empString = String.format(
+                    "%-10s %-15s %-20s %-10s",
+                    emp.getEmpNo(),
+                    emp.getFirstName(),
+                    emp.getLastName(),
+                    emp.getSalary());
+
+            System.out.println(empString);
+        }
+    }
+}

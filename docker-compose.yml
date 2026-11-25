@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+  db:
+    build: ./db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    ports:
+      - "33060:3306"
