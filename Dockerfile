@@ -1,10 +1,4 @@
-FROM maven:3.9-eclipse-temurin-17
-
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-
-COPY pom.xml .
-COPY src ./src
-
-RUN mvn clean package
-
-CMD ["mvn", "exec:java", "-Dexec.mainClass=App"]
+COPY target/devops.jar devops.jar
+CMD ["java", "-jar", "devops.jar", "db:3306", "30000"]

@@ -240,5 +240,26 @@ public class EmployeeDAO {
 
         return null;
     }
+
+    // Lab 7: Add a new employee
+    public void addEmployee(Employee emp) {
+
+        String sql = "INSERT INTO employees " +
+                     "(emp_no, birth_date, first_name, last_name, gender, hire_date) " +
+                     "VALUES (?, '9999-01-01', ?, ?, 'M', '9999-01-01')";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, emp.getEmpNo());
+            statement.setString(2, emp.getFirstName());
+            statement.setString(3, emp.getLastName());
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+            System.out.println("Failed to add employee");
+        }
+    }
 }
-   

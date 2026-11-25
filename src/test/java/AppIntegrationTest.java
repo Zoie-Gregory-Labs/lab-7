@@ -2,6 +2,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,4 +69,31 @@ class AppIntegrationTest {
         assertEquals("Ronghao", employee.getFirstName());
         assertEquals("Garigliano", employee.getLastName());
     }
+
+    @Test
+    void testAddEmployee() throws Exception {
+        int empNo = 9999998;
+        Employee employee = new Employee(empNo, "Lab", "Seven", 50000);
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement delete = connection.prepareStatement(
+                 "DELETE FROM employees WHERE emp_no = ?")) {
+            delete.setInt(1, empNo);
+            delete.executeUpdate();
+        }
+
+        employeeDAO.addEmployee(employee);
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                 "SELECT first_name, last_name FROM employees WHERE emp_no = ?")) {
+            statement.setInt(1, empNo);
+            try (ResultSet result = statement.executeQuery()) {
+                assertTrue(result.next());
+                assertEquals("Lab", result.getString("first_name"));
+                assertEquals("Seven", result.getString("last_name"));
+            }
+        }
+    }
+
 }

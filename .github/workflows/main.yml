@@ -55,12 +55,25 @@ jobs:
 
       - name: Load Employee Database
         working-directory: db/test_db
-        run: mysql -h 127.0.0.1 -P 3306 -u root -pexample < employees.sql
+        run: |
+          mysql -h 127.0.0.1 -P 3306 -u root -pexample < employees.sql
+          for file in load_departments.dump load_employees.dump load_dept_emp.dump load_dept_manager.dump load_titles.dump load_salaries1.dump load_salaries2.dump load_salaries3.dump; do
+            mysql -h 127.0.0.1 -P 3306 -u root -pexample employees < "$file"
+          done
 
       - name: Run Integration Tests
         run: mvn -Dtest=AppIntegrationTest test
         env:
           DB_HOST: 127.0.0.1:3306
+
+      - name: Generate Coverage Report
+        run: mvn jacoco:report
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./target/site/jacoco/jacoco.xml
+          fail_ci_if_error: false
 
   build:
     name: Build HR System

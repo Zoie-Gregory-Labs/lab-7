@@ -1,5 +1,7 @@
-# lab-3
 # HR Management System
+
+[![codecov](https://codecov.io/gh/Zoie-Gregory-Labs/lab-7/branch/main/graph/badge.svg)](https://codecov.io/gh/Zoie-Gregory-Labs/lab-7)
+
 
 ## Project Overview
 

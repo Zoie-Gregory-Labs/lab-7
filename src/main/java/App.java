@@ -5,6 +5,13 @@ public class App {
 
     public static void main(String[] args) {
 
+        if (args.length > 0 && !args[0].trim().isEmpty()) {
+            System.setProperty("db.host", args[0]);
+        }
+        if (args.length > 1 && !args[1].trim().isEmpty()) {
+            System.setProperty("db.delay", args[1]);
+        }
+
         Scanner scanner = new Scanner(System.in);
         EmployeeDAO employeeDAO = new EmployeeDAO();
 
